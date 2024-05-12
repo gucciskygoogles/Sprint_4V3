@@ -1,10 +1,15 @@
 package pages;
 
-import org.junit.Assert;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class OrderPage {
 
@@ -29,7 +34,7 @@ public class OrderPage {
 
     //Блок полей, связанных с завершением оформления заказа
     private final By doYouWantToOrderButtonYes = By.xpath("/html/body/div/div/div[2]/div[5]/div[2]/button[2]");
-    private final By messageOfCompletedOrder = By.xpath("/html/body/div/div/div[2]/div[5]/div[1]");
+    private final By messageOfCompletedOrder = By.xpath("//button[contains(text(),'Посмотреть статус')]");
 
 
     public OrderPage(WebDriver driver) {
@@ -83,7 +88,21 @@ public class OrderPage {
     }
 
     public void checkVisibleOfMessage() {
-        Assert.assertNull("Элемент не найден", driver.findElement(messageOfCompletedOrder));
+        MatcherAssert.assertThat("Элемент не найден или не отображается",
+                driver.findElement(messageOfCompletedOrder).isDisplayed(),
+                CoreMatchers.is(true));
+    }
+
+    public static String getTomorrowDate() {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        String tomorrowDate = sdf.format(calendar.getTime());
+
+        return tomorrowDate;
     }
 
 }

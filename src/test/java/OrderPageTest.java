@@ -5,9 +5,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import pages.BasePage;
 import pages.HomePage;
 import pages.OrderPage;
 
@@ -38,26 +36,21 @@ public class OrderPageTest {
     @Parameterized.Parameters
     public static Object[][] getData() {
         return new Object[][] {
-                {"Никита", "Зяблов", "Пушкина 3", "+73847220934", By.xpath(".//button[@class='Button_Button__ra12g']"), "05.10.2024", "Привет"},
-                {"Рауль", "Гонзалес", "Сан марино 6", "+73847220934", By.xpath(".//button[@class='Button_Button__ra12g']"), "05.10.2024", "Привет"},
-                {"Никита", "Зяблов", "Пушкина 3", "+73847220934", By.xpath(".//button[@class='Button_Button__ra12g Button_Middle__1CSJM']"), "15.10.2024", "Курьер"},
-                {"Рауль", "Гонзалес", "Сан марино 6", "+73847220934", By.xpath(".//button[@class='Button_Button__ra12g Button_Middle__1CSJM']"), "25.11.2024", "У дома"},
+                {"Никита", "Зяблов", "Пушкина 3", "+73847220934", By.xpath(".//button[@class='Button_Button__ra12g']"), OrderPage.getTomorrowDate(), "Привет"},
+                {"Рауль", "Гонзалес", "Сан марино 6", "+73847220934", By.xpath(".//button[@class='Button_Button__ra12g']"), OrderPage.getTomorrowDate(), "Привет"},
+                {"Никита", "Зяблов", "Пушкина 3", "+73847220934", By.xpath(".//button[@class='Button_Button__ra12g Button_Middle__1CSJM']"), OrderPage.getTomorrowDate(), "Курьер"},
+                {"Рауль", "Гонзалес", "Сан марино 6", "+73847220934", By.xpath(".//button[@class='Button_Button__ra12g Button_Middle__1CSJM']"), OrderPage.getTomorrowDate(), "У дома"},
         };
     }
 
     @Before
     public void setUp() {
-        driver = new ChromeDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
-        new WebDriverWait(driver, 10)
-                .until(ExpectedConditions
-                .visibilityOfElementLocated(By
-                .xpath("//*[@id=\"rcc-confirm-button\"]")));
-        driver.findElement(By.xpath("//*[@id=\"rcc-confirm-button\"]")).click();
+        BasePage basePage = new BasePage();
+        driver = basePage.setUpDriver("chrome");
     }
 
     @Test
-    public void orderWithHeaderButtonTest() throws InterruptedException {
+    public void orderWithHeaderButtonTest() {
         HomePage homePage = new HomePage(driver);
         OrderPage orderPage = homePage.clickOnOrderButton(orderButton);
         orderPage.setData(name, surname, address, phone);
@@ -67,7 +60,6 @@ public class OrderPageTest {
         orderPage.clickOnOrderButton();
         orderPage.clickOnYesButton();
         orderPage.checkVisibleOfMessage();
-        Thread.sleep(5000);
     }
 
     @After
