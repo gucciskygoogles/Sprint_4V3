@@ -39,7 +39,7 @@ public class HomePageTest {
     @Before
     public void setUp() {
         BasePage basePage = new BasePage();
-        driver = basePage.setUpDriver("chrome");
+        driver = basePage.setUpDriver("firefox");
     }
 
     @Test
